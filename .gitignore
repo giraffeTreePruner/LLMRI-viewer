@@ -1,5 +1,6 @@
 node_modules/
 dist/
 .planning/
+.claude/
 .DS_Store
 *.local
