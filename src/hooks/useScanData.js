@@ -19,10 +19,10 @@ export function useScanData() {
   const [error, setError] = useState(null);
 
   function validate(data) {
-    const required = ['brainscan_version', 'scan_metadata', 'results', 'heatmap_matrices'];
+    const required = ['llmri_version', 'scan_metadata', 'results', 'heatmap_matrices'];
     for (const key of required) {
       if (!(key in data)) {
-        throw new Error(`Missing required key: "${key}". Is this a valid BrainScan JSON?`);
+        throw new Error(`Missing required key: "${key}". Is this a valid LL-MRI JSON?`);
       }
     }
   }

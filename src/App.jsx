@@ -104,7 +104,7 @@ export default function App() {
         {/* Logo */}
         <div>
           <h1 className="text-lg font-bold text-gray-100 tracking-tight">
-            🧠 BrainScan <span className="text-indigo-400">Viewer</span>
+            🧠 LL-MRI <span className="text-indigo-400">Viewer</span>
           </h1>
           {modelName && (
             <div className="text-xs text-gray-500 mt-0.5 truncate" title={modelName}>
