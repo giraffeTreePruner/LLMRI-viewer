@@ -1,6 +1,6 @@
-# BrainScan Viewer
+# LL-MRI Viewer
 
-An interactive web app for exploring [BrainScan](https://github.com/giraffeTreePruner/brainscan) scan results. Visualizes the performance impact of RYS (Repeat Yourself Smarter) layer duplication configurations across transformer models.
+An interactive web app for exploring [LL-MRI](https://github.com/giraffeTreePruner/LL-MRI-scanner) scan results. Visualizes the performance impact of RYS (Repeat Yourself Smarter) layer duplication configurations across transformer models.
 
 ![Tech Stack](https://img.shields.io/badge/React-18-blue) ![D3](https://img.shields.io/badge/D3-7-orange) ![Vite](https://img.shields.io/badge/Vite-5-purple)
 
@@ -8,9 +8,9 @@ An interactive web app for exploring [BrainScan](https://github.com/giraffeTreeP
 
 ## What is RYS?
 
-RYS is a technique that duplicates a contiguous block of transformer layers to expand model capacity without retraining. A configuration `(i, j)` causes layers `[0..j-1] + [i..N-1]` to execute — meaning layers `i` through `j-1` run twice. BrainScan exhaustively evaluates all valid `(i, j)` configurations for a given model and measures the effect on benchmark performance.
+RYS is a technique that duplicates a contiguous block of transformer layers to expand model capacity without retraining. A configuration `(i, j)` causes layers `[0..j-1] + [i..N-1]` to execute — meaning layers `i` through `j-1` run twice. LL-MRI exhaustively evaluates all valid `(i, j)` configurations for a given model and measures the effect on benchmark performance.
 
-BrainScan Viewer makes those results explorable.
+LL-MRI Viewer makes those results explorable.
 
 ---
 
@@ -23,7 +23,7 @@ BrainScan Viewer makes those results explorable.
 - **Multi-select Comparison** — Shift-click multiple configs to compare them side by side
 - **Region Selection** — Click and drag to select a rectangular region and view aggregate stats
 - **Export Commands** — One-click copy of `hf_export` bash commands for any selected config
-- **File Upload** — Drag and drop your own BrainScan JSON to visualize custom scan results
+- **File Upload** — Drag and drop your own LL-MRI JSON to visualize custom scan results
 - **Demo Models** — Ships with a pre-computed scan for `Qwen2.5-3B-Instruct`
 
 ---
@@ -42,7 +42,7 @@ npm run preview    # Preview the built dist locally
 ## Project Structure
 
 ```
-brainscan-viewer/
+LL-MRI-viewer/
 ├── public/
 │   └── data/                        # Pre-computed scan JSONs for demo
 │       └── qwen25-3b-instruct.json
@@ -77,25 +77,23 @@ brainscan-viewer/
 
 ## Scan JSON Format
 
-BrainScan Viewer accepts JSON files produced by BrainScan. Required top-level keys:
+LL-MRI Viewer accepts JSON files produced by [LL-MRI](https://github.com/giraffeTreePruner/LL-MRI-scanner). Required top-level keys:
 
 ```json
 {
-  "brainscan_version": "0.1.0",
+  "llmri_version": "1.0.0",
   "scan_metadata": {
     "model_name": "Qwen/Qwen2.5-3B-Instruct",
     "num_layers": 28,
     "total_configs": 406,
-    "probes": ["pubmedqa", "eq"],
-    "baseline_pubmedqa": 0.72,
-    "baseline_eq": 0.61
+    "completed_configs": 406
   },
-  "baseline": { ... },
-  "results": [ ... ],
+  "baseline": { "..." },
+  "results": [ "..." ],
   "heatmap_matrices": {
-    "pubmedqa_delta": { "data": [[...]] },
-    "eq_delta":       { "data": [[...]] },
-    "combined_delta": { "data": [[...]] }
+    "pubmedqa_delta": { "data": [["..."]] },
+    "eq_delta":       { "data": [["..."]] },
+    "combined_delta": { "data": [["..."]] }
   }
 }
 ```
