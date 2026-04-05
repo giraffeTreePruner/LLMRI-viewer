@@ -35,6 +35,7 @@ export function Heatmap({
   const svgRef = useRef(null);
   const tooltipRef = useRef(null);
   const isDragging = useRef(false);
+  const pendingClick = useRef(null);
 
   // Dimensions
   const N = numLayers ?? (matrix?.length ? matrix.length - 1 : 0);
@@ -241,23 +242,24 @@ export function Heatmap({
       const cell = cellFromEvent(e, g.node());
       if (!cell) return;
       isDragging.current = false;
-      // Will become a drag if mouse moves
-      overlay._pendingClick = { cell, shiftKey: e.shiftKey, startPos: d3.pointer(e) };
-      onDragStart(cell);
+      // Store in a ref so it survives effect re-runs triggered by state changes
+      pendingClick.current = { cell, shiftKey: e.shiftKey, startPos: d3.pointer(e) };
     });
 
     overlay.on('mousemove.drag', (e) => {
-      if (!overlay._pendingClick) return;
+      if (!pendingClick.current) return;
       const [cx, cy] = d3.pointer(e);
-      const [sx, sy] = overlay._pendingClick.startPos;
+      const [sx, sy] = pendingClick.current.startPos;
       if (!isDragging.current && (Math.abs(cx - sx) > 4 || Math.abs(cy - sy) > 4)) {
         isDragging.current = true;
+        // Only trigger drag state update once movement is confirmed
+        onDragStart(pendingClick.current.cell);
       }
     });
 
     overlay.on('mouseup', (e) => {
-      const pending = overlay._pendingClick;
-      overlay._pendingClick = null;
+      const pending = pendingClick.current;
+      pendingClick.current = null;
       if (!pending) return;
 
       if (isDragging.current) {
