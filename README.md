@@ -8,9 +8,13 @@ An interactive web app for exploring [LL-MRI](https://github.com/giraffeTreePrun
 
 ## What is RYS?
 
-RYS is a technique that duplicates a contiguous block of transformer layers to expand model capacity without retraining. A configuration `(i, j)` causes layers `[0..j-1] + [i..N-1]` to execute — meaning layers `i` through `j-1` run twice. LL-MRI exhaustively evaluates all valid `(i, j)` configurations for a given model and measures the effect on benchmark performance.
+RYS (Repeat Yourself Smarter), discovered by [dnhkng](https://dnhkng.github.io/posts/rys/), improves a transformer's performance by duplicating a contiguous block of its middle layers and running inference through that block twice — no retraining, no new weights.
 
-LL-MRI Viewer makes those results explorable.
+A configuration `(i, j)` causes the layer execution path `[0..j-1] + [i..N-1]`, meaning layers `i` through `j-1` run twice. Applied to Qwen2-72B at `(45, 52)`, this reached #1 on the HuggingFace Open LLM Leaderboard with a +2.61% average gain and zero additional parameters.
+
+The technique reveals a three-phase transformer anatomy — **encoding**, **reasoning**, and **decoding** — that is consistent across model families. Middle layers function as complete reasoning *circuits*; duplicating them gives the model a second pass with its existing circuitry, essentially letting it think longer for free. A [follow-up sweep across 2 million candidates](https://dnhkng.github.io/posts/rys-ii/) confirmed that simple contiguous mid-stack blocks dominate the efficiency frontier: duplicating a single layer pair can capture most of the gain at under 2% compute overhead.
+
+LL-MRI exhaustively evaluates all valid `(i, j)` configurations for a given model and measures the effect on benchmark performance. The heatmap it renders is the same structural "brain scan" the original articles used to map transformer anatomy — LL-MRI Viewer makes those results interactive and explorable.
 
 ---
 
